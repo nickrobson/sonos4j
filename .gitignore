@@ -1,0 +1,12 @@
+/target/
+/out/
+/bin/
+
+/.idea
+
+/.project
+/.classpath
+/*.iml
+
+*.class
+*.jar
