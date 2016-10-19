@@ -1,6 +1,6 @@
-package xyz.nickr.jsonos.api;
+package xyz.nickr.sonos4j.api;
 
-import xyz.nickr.jsonos.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.speaker.Speaker;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

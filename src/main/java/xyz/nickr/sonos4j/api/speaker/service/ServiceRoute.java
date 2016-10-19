@@ -1,11 +1,11 @@
-package xyz.nickr.jsonos.api.speaker.service;
+package xyz.nickr.sonos4j.api.speaker.service;
 
 import lombok.Data;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import xyz.nickr.jsonos.Util;
-import xyz.nickr.jsonos.api.speaker.Speaker;
+import xyz.nickr.sonos4j.Util;
+import xyz.nickr.sonos4j.api.speaker.Speaker;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;

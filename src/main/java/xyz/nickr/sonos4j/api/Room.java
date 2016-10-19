@@ -1,9 +1,9 @@
-package xyz.nickr.jsonos.api;
+package xyz.nickr.sonos4j.api;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import xyz.nickr.jsonos.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.speaker.Speaker;
 
 import java.util.List;
 import java.util.Map;

@@ -1,15 +1,13 @@
-package xyz.nickr.jsonos.api.speaker;
+package xyz.nickr.sonos4j.api.speaker;
 
 import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import xyz.nickr.jsonos.Util;
-import xyz.nickr.jsonos.api.media.CurrentTrack;
-import xyz.nickr.jsonos.api.media.Track;
-import xyz.nickr.jsonos.api.speaker.service.ServiceRoute;
-import xyz.nickr.jsonos.api.speaker.service.ServiceRouteDirection;
-import xyz.nickr.jsonos.api.speaker.service.ServiceSchema;
+import xyz.nickr.sonos4j.Util;
+import xyz.nickr.sonos4j.api.media.CurrentTrack;
+import xyz.nickr.sonos4j.api.media.Track;
+import xyz.nickr.sonos4j.api.speaker.service.ServiceRoute;
+import xyz.nickr.sonos4j.api.speaker.service.ServiceSchema;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Nick Robson

@@ -1,4 +1,4 @@
-package xyz.nickr.jsonos.api.media;
+package xyz.nickr.sonos4j.api.media;
 
 import lombok.Data;
 

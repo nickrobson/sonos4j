@@ -1,9 +1,9 @@
-package xyz.nickr.jsonos.api;
+package xyz.nickr.sonos4j.api;
 
 import org.junit.Test;
-import xyz.nickr.jsonos.api.media.CurrentTrack;
-import xyz.nickr.jsonos.api.media.Track;
-import xyz.nickr.jsonos.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.media.CurrentTrack;
+import xyz.nickr.sonos4j.api.media.Track;
+import xyz.nickr.sonos4j.api.speaker.Speaker;
 
 import java.util.List;
 
