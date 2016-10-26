@@ -36,16 +36,20 @@ public class ServiceRoute {
         this.action = serviceType + "#" + this.name;
 
         Map<String, ServiceRouteArgument> arguments = new LinkedHashMap<>();
-        List<Element> argumentList = Util.cast(Util.getChildList(children.get("argumentList")), Element.class);
 
-        for (Element element : argumentList) {
-            Map<String, Node> elc = Util.getChildren(element);
-            String argName = elc.get("name").getTextContent();
-            String argDir = elc.get("direction").getTextContent();
-            ServiceStateVariable argVariable = vars.get(elc.get("relatedStateVariable").getTextContent());
-            if (argName != null && !argName.isEmpty() && (argDir.equals("in") || argDir.equals("out")) && argVariable != null) {
-                ServiceRouteDirection argDirection = ServiceRouteDirection.valueOf(argDir.toUpperCase());
-                arguments.put(argName, new ServiceRouteArgument(argName, argDirection, argVariable));
+        Node nodeArgumentList = children.get("argumentList");
+        if (nodeArgumentList != null) {
+            List<Element> argumentList = Util.cast(Util.getChildList(nodeArgumentList), Element.class);
+
+            for (Element element : argumentList) {
+                Map<String, Node> elc = Util.getChildren(element);
+                String argName = elc.get("name").getTextContent();
+                String argDir = elc.get("direction").getTextContent();
+                ServiceStateVariable argVariable = vars.get(elc.get("relatedStateVariable").getTextContent());
+                if (argName != null && !argName.isEmpty() && (argDir.equals("in") || argDir.equals("out")) && argVariable != null) {
+                    ServiceRouteDirection argDirection = ServiceRouteDirection.valueOf(argDir.toUpperCase());
+                    arguments.put(argName, new ServiceRouteArgument(argName, argDirection, argVariable));
+                }
             }
         }
 

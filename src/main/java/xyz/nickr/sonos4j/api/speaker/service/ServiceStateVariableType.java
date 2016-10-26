@@ -23,6 +23,12 @@ public enum ServiceStateVariableType {
             return s;
         }
     },
+    SHORT("i2") {
+        @Override
+        public Object cast(String s) {
+            return Short.parseShort(s);
+        }
+    },
     INT("i4") {
         @Override
         public Object cast(String s) {
