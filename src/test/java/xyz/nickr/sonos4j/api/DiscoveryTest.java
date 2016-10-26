@@ -1,9 +1,8 @@
 package xyz.nickr.sonos4j.api;
 
 import org.junit.Test;
-import xyz.nickr.sonos4j.api.speaker.ServiceList;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
-import xyz.nickr.sonos4j.api.speaker.service.ServiceSchema;
+import xyz.nickr.sonos4j.api.model.ServiceList;
+import xyz.nickr.sonos4j.api.model.service.ServiceSchema;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,8 +1,7 @@
 package xyz.nickr.sonos4j.api;
 
-import xyz.nickr.sonos4j.api.speaker.Device;
-import xyz.nickr.sonos4j.api.speaker.ServiceList;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.model.SpeakerDevice;
+import xyz.nickr.sonos4j.api.model.ServiceList;
 
 import java.util.function.Consumer;
 
@@ -24,11 +23,9 @@ public class GetRoutes {
                     });
                 });
             };
-            Device device = speaker.getDescription().getDevice();
+            SpeakerDevice device = speaker.getDescription().getDevice();
             device.getServiceList().getServices().forEach(printer::accept);
-            device.getDeviceList().getDevices().forEach(d -> {
-                d.getServiceList().getServices().forEach(printer::accept);
-            });
+            device.getDeviceList().getDevices().forEach(d -> d.getServiceList().getServices().forEach(printer::accept));
             return;
         }
     }

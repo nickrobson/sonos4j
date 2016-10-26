@@ -1,4 +1,4 @@
-package xyz.nickr.sonos4j.api.speaker.service;
+package xyz.nickr.sonos4j.api.model.service;
 
 import lombok.Data;
 

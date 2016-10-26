@@ -1,10 +1,10 @@
-package xyz.nickr.sonos4j.api.media;
+package xyz.nickr.sonos4j.api.model.media;
 
 import lombok.Data;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.Speaker;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

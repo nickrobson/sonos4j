@@ -1,4 +1,4 @@
-package xyz.nickr.sonos4j.api.speaker;
+package xyz.nickr.sonos4j.api.model;
 
 import lombok.Data;
 import org.w3c.dom.Element;

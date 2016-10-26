@@ -1,4 +1,4 @@
-package xyz.nickr.sonos4j.api.speaker.service;
+package xyz.nickr.sonos4j.api.model.service;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -7,8 +7,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
-import xyz.nickr.sonos4j.api.speaker.SpecVersion;
+import xyz.nickr.sonos4j.api.Speaker;
+import xyz.nickr.sonos4j.api.model.SpecVersion;
 
 import java.util.HashMap;
 import java.util.List;

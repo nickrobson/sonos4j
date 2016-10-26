@@ -1,10 +1,11 @@
-package xyz.nickr.sonos4j.api.speaker;
+package xyz.nickr.sonos4j.api.model;
 
 import lombok.Data;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
+import xyz.nickr.sonos4j.api.Speaker;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class DeviceDescription {
     public static final String DEVICE_DESCRIPTION_URL = "http://%s:1400/xml/device_description.xml";
 
     private final SpecVersion specVersion;
-    private final Device device;
+    private final SpeakerDevice device;
 
     public DeviceDescription(Speaker speaker) {
         String url = String.format(DEVICE_DESCRIPTION_URL, speaker.getIp());
@@ -28,7 +29,7 @@ public class DeviceDescription {
         Map<String, Node> children = Util.getChildren(root);
 
         this.specVersion = new SpecVersion(children.get("specVersion"));
-        this.device = new Device(children.get("device"));
+        this.device = new SpeakerDevice(children.get("device"));
     }
 
 }

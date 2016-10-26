@@ -3,7 +3,6 @@ package xyz.nickr.sonos4j.api;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
 
 import java.util.List;
 import java.util.Map;

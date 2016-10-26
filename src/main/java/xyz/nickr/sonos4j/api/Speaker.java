@@ -1,13 +1,19 @@
-package xyz.nickr.sonos4j.api.speaker;
+package xyz.nickr.sonos4j.api;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import xyz.nickr.sonos4j.Util;
-import xyz.nickr.sonos4j.api.media.CurrentTrack;
-import xyz.nickr.sonos4j.api.media.Track;
-import xyz.nickr.sonos4j.api.speaker.service.ServiceRoute;
-import xyz.nickr.sonos4j.api.speaker.service.ServiceSchema;
+import xyz.nickr.sonos4j.api.controller.AlarmClockController;
+import xyz.nickr.sonos4j.api.controller.MusicServicesController;
+import xyz.nickr.sonos4j.api.model.DeviceDescription;
+import xyz.nickr.sonos4j.api.model.DeviceList;
+import xyz.nickr.sonos4j.api.model.ServiceList;
+import xyz.nickr.sonos4j.api.model.media.CurrentTrack;
+import xyz.nickr.sonos4j.api.model.media.Track;
+import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
+import xyz.nickr.sonos4j.api.model.service.ServiceSchema;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -20,17 +26,24 @@ import java.util.Map;
 /**
  * @author Nick Robson
  */
+@Getter
 public class Speaker {
 
     public static final String SOAP_TEMPLATE = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body>%s</s:Body></s:Envelope>";
     public static final String GET_QUEUE_BODY_TEMPLATE = "<u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"><ObjectID>Q:0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>dc:title,res,dc:creator,upnp:artist,upnp:album,upnp:albumArtURI</Filter><StartingIndex>%s</StartingIndex><RequestedCount>%s</RequestedCount><SortCriteria></SortCriteria></u:Browse>";
 
-    @Getter
     private final String ip;
 
+    @Getter(AccessLevel.NONE)
     private final String url;
 
     private DeviceDescription description;
+
+    @Getter(lazy = true)
+    private final AlarmClockController alarmClockController = new AlarmClockController(this);
+
+    @Getter(lazy = true)
+    private final MusicServicesController musicServicesController = new MusicServicesController(this);
 
     public Speaker(String ip) {
         this.ip = ip;
@@ -69,20 +82,24 @@ public class Speaker {
         return null;
     }
 
-    public ServiceRoute getRoute(String endpoint, String name) {
+    public ServiceRoute getRoute(String endpoint, String name, boolean exceptionIfFail) {
         ServiceList.Service service = getService(endpoint);
         if (service == null)
             return null;
         ServiceSchema schema = service.getSchema().load(this);
-        return schema.getRoute(name);
+        ServiceRoute route = schema.getRoute(name);
+        if (route == null && exceptionIfFail) {
+            throw new RuntimeException(String.format("No %s : %s route!", endpoint, name));
+        }
+        return route;
+    }
+
+    public ServiceRoute getRoute(String endpoint, String name) {
+        return getRoute(endpoint, name, false);
     }
 
     public CurrentTrack getCurrentTrack() {
-        ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetPositionInfo");
-
-        if (route == null) {
-            throw new RuntimeException("No get position info route!");
-        }
+        ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetPositionInfo", true);
 
         Map<String, Object> vars = new HashMap<>();
 
@@ -99,10 +116,6 @@ public class Speaker {
     public void getMediaInfo() {
         ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetMediaInfo");
 
-        if (route == null) {
-            throw new RuntimeException("No get media info route!");
-        }
-
         Map<String, Object> vars = new HashMap<>();
 
         vars.put("InstanceID", 0);
@@ -118,10 +131,6 @@ public class Speaker {
 
     public List<Track> getQueue(int start, int maxItems) {
         ServiceRoute route = getRoute("/MediaServer/ContentDirectory/Control", "Browse");
-
-        if (route == null) {
-            throw new RuntimeException("No browse route!");
-        }
 
         Map<String, Object> vars = new HashMap<>();
 

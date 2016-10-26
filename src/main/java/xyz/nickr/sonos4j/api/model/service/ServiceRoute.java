@@ -1,11 +1,11 @@
-package xyz.nickr.sonos4j.api.speaker.service;
+package xyz.nickr.sonos4j.api.model.service;
 
 import lombok.Data;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.Speaker;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -65,7 +65,10 @@ public class ServiceRoute {
 
         for (Map.Entry<String, Object> var : vars.entrySet()) {
             Element sub = doc.createElement(var.getKey());
-            sub.setTextContent(var.getValue().toString());
+            Object val = var.getValue();
+            if (val instanceof Boolean)
+                val = (boolean) val ? "1" : "0";
+            sub.setTextContent(val.toString());
             root.appendChild(sub);
         }
 

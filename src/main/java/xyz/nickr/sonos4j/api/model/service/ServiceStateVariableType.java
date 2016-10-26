@@ -1,4 +1,4 @@
-package xyz.nickr.sonos4j.api.speaker.service;
+package xyz.nickr.sonos4j.api.model.service;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public enum ServiceStateVariableType {
     BOOLEAN("boolean") {
         @Override
         public Object cast(String s) {
-            return Boolean.parseBoolean(s);
+            return "1".equals(s);
         }
     },
     STRING("string") {

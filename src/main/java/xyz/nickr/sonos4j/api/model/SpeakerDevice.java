@@ -1,4 +1,4 @@
-package xyz.nickr.sonos4j.api.speaker;
+package xyz.nickr.sonos4j.api.model;
 
 import lombok.Data;
 import org.w3c.dom.Node;
@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Nick Robson
  */
 @Data
-public class Device {
+public class SpeakerDevice {
 
     private final String deviceType;
     private final String friendlyName;
@@ -34,7 +34,7 @@ public class Device {
     private final ServiceList serviceList;
     private final DeviceList deviceList;
 
-    public Device(Node node) {
+    public SpeakerDevice(Node node) {
         Map<String, Node> children = Util.getChildren(node);
 
         this.deviceType = children.get("deviceType").getTextContent();

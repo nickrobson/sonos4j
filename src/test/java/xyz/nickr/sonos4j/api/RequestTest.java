@@ -1,9 +1,9 @@
 package xyz.nickr.sonos4j.api;
 
 import org.junit.Test;
-import xyz.nickr.sonos4j.api.media.CurrentTrack;
-import xyz.nickr.sonos4j.api.media.Track;
-import xyz.nickr.sonos4j.api.speaker.Speaker;
+import xyz.nickr.sonos4j.api.model.Alarm;
+import xyz.nickr.sonos4j.api.model.media.CurrentTrack;
+import xyz.nickr.sonos4j.api.model.media.Track;
 
 import java.util.List;
 
@@ -49,10 +49,34 @@ public class RequestTest {
     }
 
     @Test
-    public void testRequestMediaInfo() {
+    public void testListAlarms() {
         Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
-            speaker.getMediaInfo();
+            List<Alarm> alarms = speaker.getAlarmClockController().getAlarms();
+            for (Alarm alarm : alarms) {
+                System.out.println(alarm);
+            }
+            break;
+        }
+    }
+
+    @Test
+    public void testCreateAlarm() {
+        Speaker[] speakers = Discovery.getSpeakers();
+        for (Speaker speaker : speakers) {
+            Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, "RINCON_5CAAFD03F86E01400", "x-rincon-buzzer:0", "", "SHUFFLE_NOREPEAT", 25, false);
+            Alarm alarm2 = speaker.getAlarmClockController().createAlarm(alarm);
+            System.out.println("Created alarm: " + alarm2);
+            System.out.println("    From: " + alarm);
+            break;
+        }
+    }
+
+    @Test
+    public void testListMusicServices() {
+        Speaker[] speakers = Discovery.getSpeakers();
+        for (Speaker speaker : speakers) {
+            speaker.getMusicServicesController().getAvailableServiceDescriptors();
             break;
         }
     }
