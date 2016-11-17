@@ -7,6 +7,8 @@ import xyz.nickr.sonos4j.api.model.service.ServiceSchema;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 /**
  * @author Nick Robson
  */
@@ -17,6 +19,8 @@ public class DiscoveryTest {
         System.out.println("Finding speakers...");
         long start = System.currentTimeMillis();
         Speaker[] speakers = Discovery.getSpeakers();
+        if (speakers.length == 0)
+            fail("No Sonos system found");
         System.out.format("Took %sms to fetch speakers!\n", System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
         for (Speaker speaker : speakers) {
@@ -31,6 +35,8 @@ public class DiscoveryTest {
         System.out.println("Finding rooms...");
         long start = System.currentTimeMillis();
         List<Speaker> speakers = Arrays.asList(Discovery.getSpeakers());
+        if (speakers.isEmpty())
+            fail("No Sonos system found");
         System.out.format("Took %sms to fetch speakers!\n", System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
         List<Room> rooms = Room.getRooms(speakers);
@@ -39,7 +45,7 @@ public class DiscoveryTest {
         for (Room room : rooms) {
             System.out.println("Room: " + room.getName());
             for (Speaker speaker : room.getSpeakers()) {
-                System.out.println(speaker.getDescription());
+                System.out.println("    " + speaker.getDescription());
             }
             System.out.format("Took %sms to fetch room info!\n", System.currentTimeMillis() - start);
             start = System.currentTimeMillis();
@@ -53,8 +59,10 @@ public class DiscoveryTest {
             ServiceList.Service srv = speaker.getDescription().getDevice().getServiceList().getServices().get(0);
             ServiceSchema schema = srv.getSchema();
             schema.load(speaker);
-            break;
+            System.out.println(schema);
+            return;
         }
+        fail("No Sonos system found");
     }
 
 }

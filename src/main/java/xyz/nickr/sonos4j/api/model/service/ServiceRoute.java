@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
 import xyz.nickr.sonos4j.api.Speaker;
+import xyz.nickr.sonos4j.api.exception.SonosException;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -13,7 +14,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Nick Robson
@@ -84,7 +88,7 @@ public class ServiceRoute {
 
             return request(speaker, writer.toString());
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new SonosException(speaker, "Error while making request", ex);
         }
     }
 

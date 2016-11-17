@@ -23,7 +23,7 @@ public class Alarm {
     private final String roomUUID;
     private final String programURI;
     private final String programMetaData;
-    private final String playMode;
+    private final AlarmPlayMode playMode;
     private final int volume;
     private final boolean includeLinkedZones;
 
@@ -59,6 +59,15 @@ public class Alarm {
         THURSDAY,
         FRIDAY,
         SATURDAY
+
+    }
+
+    public enum AlarmPlayMode {
+
+        NORMAL,
+        REPEAT_ALL,
+        SHUFFLE_NOREPEAT,
+        SHUFFLE
 
     }
 

@@ -7,6 +7,8 @@ import org.w3c.dom.Element;
 import xyz.nickr.sonos4j.Util;
 import xyz.nickr.sonos4j.api.controller.AlarmClockController;
 import xyz.nickr.sonos4j.api.controller.MusicServicesController;
+import xyz.nickr.sonos4j.api.exception.RouteMissingException;
+import xyz.nickr.sonos4j.api.exception.SonosException;
 import xyz.nickr.sonos4j.api.model.DeviceDescription;
 import xyz.nickr.sonos4j.api.model.DeviceList;
 import xyz.nickr.sonos4j.api.model.ServiceList;
@@ -15,7 +17,9 @@ import xyz.nickr.sonos4j.api.model.media.Track;
 import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
 import xyz.nickr.sonos4j.api.model.service.ServiceSchema;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -89,7 +93,7 @@ public class Speaker {
         ServiceSchema schema = service.getSchema().load(this);
         ServiceRoute route = schema.getRoute(name);
         if (route == null && exceptionIfFail) {
-            throw new RuntimeException(String.format("No %s : %s route!", endpoint, name));
+            throw new RouteMissingException(this, endpoint, name);
         }
         return route;
     }
@@ -107,7 +111,13 @@ public class Speaker {
 
         Map<String, Object> result = route.request(this, vars);
 
-        Document meta = Util.parseDocument(result.get("TrackMetaData").toString());
+        System.out.println(result);
+
+        String trackMetadata = result.get("TrackMetaData").toString();
+        if (trackMetadata.isEmpty())
+            return null;
+
+        Document meta = Util.parseDocument(trackMetadata);
         Element element = (Element) meta.getDocumentElement().getFirstChild();
 
         return new CurrentTrack((long) result.get("Track"), Track.parse(element));
@@ -186,7 +196,7 @@ public class Speaker {
             }
             return out;
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new SonosException(this, String.format("Failed to make request:\nendpoint = %s\naction = %s\nbody = %s", endpoint, action, body), e);
         }
     }
 

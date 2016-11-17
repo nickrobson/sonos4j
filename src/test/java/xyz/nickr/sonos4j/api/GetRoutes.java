@@ -1,9 +1,13 @@
 package xyz.nickr.sonos4j.api;
 
-import xyz.nickr.sonos4j.api.model.SpeakerDevice;
 import xyz.nickr.sonos4j.api.model.ServiceList;
+import xyz.nickr.sonos4j.api.model.SpeakerDevice;
+import xyz.nickr.sonos4j.api.model.service.ServiceRouteDirection;
 
+import java.util.List;
 import java.util.function.Consumer;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Nick Robson
@@ -19,15 +23,17 @@ public class GetRoutes {
                 service.getSchema().getRoutes().forEach((name, route) -> {
                     System.out.println("-  " + name);
                     route.getArguments().forEach((varname, var) -> {
-                        System.out.println("   -  " + var.getDirection() + " : " + varname + " : " + var.getVariable().getType().name());
+                        List<String> vars = var.getVariable().getAllowedValues();
+                        System.out.println("   " + (var.getDirection() == ServiceRouteDirection.IN ? "<--" : "-->") + "  " + varname + " : " + var.getVariable().getType().name() + (vars != null ? " : " + vars : ""));
                     });
                 });
             };
             SpeakerDevice device = speaker.getDescription().getDevice();
-            device.getServiceList().getServices().forEach(printer::accept);
-            device.getDeviceList().getDevices().forEach(d -> d.getServiceList().getServices().forEach(printer::accept));
+            device.getServiceList().getServices().forEach(printer);
+            device.getDeviceList().getDevices().forEach(d -> d.getServiceList().getServices().forEach(printer));
             return;
         }
+        fail("No Sonos system found");
     }
 
 }

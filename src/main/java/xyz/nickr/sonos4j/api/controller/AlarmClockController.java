@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import xyz.nickr.sonos4j.Util;
-import xyz.nickr.sonos4j.api.model.Alarm;
 import xyz.nickr.sonos4j.api.Speaker;
+import xyz.nickr.sonos4j.api.exception.AlarmAlreadyExistsException;
+import xyz.nickr.sonos4j.api.exception.SonosException;
+import xyz.nickr.sonos4j.api.model.Alarm;
 import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
 
 import java.util.HashMap;
@@ -40,7 +42,7 @@ public class AlarmClockController {
             String roomUUID = el.getAttribute("RoomUUID");
             String programURI = el.getAttribute("ProgramURI");
             String programMetaData = el.getAttribute("ProgramMetaData");
-            String playMode = el.getAttribute("PlayMode");
+            Alarm.AlarmPlayMode playMode = Alarm.AlarmPlayMode.valueOf(el.getAttribute("PlayMode"));
             int volume = Integer.parseInt(el.getAttribute("Volume"));
             boolean includeLinkedZones = "1".equals(el.getAttribute("IncludeLinkedZones"));
 
@@ -65,10 +67,14 @@ public class AlarmClockController {
         vars.put("Volume", alarm.getVolume());
         vars.put("IncludeLinkedZones", alarm.isIncludeLinkedZones());
 
-        Map<String, Object> result = route.request(speaker, vars);
-        long id = Long.parseLong(result.get("AssignedID").toString());
+        try {
+            Map<String, Object> result = route.request(speaker, vars);
+            long id = Long.parseLong(result.get("AssignedID").toString());
 
-        return alarm.withId(id);
+            return alarm.withId(id);
+        } catch (SonosException ex) {
+            throw new AlarmAlreadyExistsException(speaker, alarm);
+        }
     }
 
     public void updateAlarm(long id, Alarm alarm) {

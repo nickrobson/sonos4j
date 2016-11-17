@@ -6,9 +6,9 @@ import org.w3c.dom.Node;
 import xyz.nickr.sonos4j.Util;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Nick Robson
@@ -20,11 +20,7 @@ public class IconList {
 
     public IconList(Node node) {
         List<Element> children = Util.cast(Util.getChildList(node), Element.class);
-        List<Icon> icons = new LinkedList<>();
-
-        for (Node child : children) {
-            icons.add(new Icon(child));
-        }
+        List<Icon> icons = children.stream().map(Icon::new).collect(Collectors.toList());
 
         this.icons = Collections.unmodifiableList(icons);
     }
