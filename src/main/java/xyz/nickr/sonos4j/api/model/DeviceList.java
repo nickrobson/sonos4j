@@ -1,5 +1,6 @@
 package xyz.nickr.sonos4j.api.model;
 
+import java.util.ArrayList;
 import lombok.Data;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,12 +21,10 @@ public class DeviceList {
 
     public DeviceList(Node node) {
         List<Element> children = Util.cast(Util.getChildList(node), Element.class);
-        List<Device> devices = new LinkedList<>();
-
+        List<Device> devices = new ArrayList<>(children.size());
         for (Node child : children) {
             devices.add(new Device(child));
         }
-
         this.devices = Collections.unmodifiableList(devices);
     }
 

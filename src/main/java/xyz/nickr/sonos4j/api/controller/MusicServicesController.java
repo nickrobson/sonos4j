@@ -29,15 +29,19 @@ public class MusicServicesController {
     public List<String> getAvailableServiceDescriptors() {
         ServiceRoute route = speaker.getRoute("/MusicServices/Control", "ListAvailableServices", true);
 
-        Map<String, Object> result = route.request(speaker, new HashMap<>());
-        result.forEach((s, o) -> System.out.println(s + " : " + o));
-
+        Map<String, Object> vars = new HashMap<>();
+        Map<String, Object> result = route.request(speaker, vars);
+        for (Map.Entry<String, Object> e : result.entrySet()) {
+            System.out.println(e.getKey() + " : " + e.getValue());
+        }
         return new LinkedList<>();
     }
 
     public void updateAvailableServices() {
         ServiceRoute route = speaker.getRoute("/MusicServices/Control", "UpdateAvailableServices", true);
-        route.request(speaker, new HashMap<>());
+
+        Map<String, Object> vars = new HashMap<>();
+        route.request(speaker, vars);
     }
 
 }

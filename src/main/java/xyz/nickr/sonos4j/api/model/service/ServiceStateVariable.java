@@ -1,5 +1,6 @@
 package xyz.nickr.sonos4j.api.model.service;
 
+import java.util.ArrayList;
 import lombok.Data;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -7,7 +8,6 @@ import xyz.nickr.sonos4j.Util;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Nick Robson
@@ -33,7 +33,11 @@ public class ServiceStateVariable {
 
         if (children.containsKey("allowedValueList")) {
             List<Element> avl = Util.cast(Util.getChildList(children.get("allowedValueList")), Element.class);
-            this.allowedValues = avl.stream().map(e -> e.getTextContent()).collect(Collectors.toList());
+            List<String> allowedValues = new ArrayList<>(avl.size());
+            for (Element e : avl) {
+                allowedValues.add(e.getTextContent());
+            }
+            this.allowedValues = allowedValues;
         } else {
             this.allowedValues = null;
         }

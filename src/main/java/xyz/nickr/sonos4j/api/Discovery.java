@@ -4,7 +4,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Nick Robson
@@ -62,6 +65,31 @@ public class Discovery {
         }
 
         return speakers;
+    }
+
+    public static List<Room> getRooms(List<Speaker> speakers) {
+        Map<String, List<Speaker>> map = new HashMap<>();
+        for (Speaker speaker : speakers) {
+            String mapKey = speaker.getDescription().getDevice().getRoomName();
+            List<Speaker> speakerList = map.get(mapKey);
+            if (speakerList == null)
+                speakerList = new ArrayList<>();
+            speakerList.add(speaker);
+            map.put(mapKey, speakerList);
+        }
+        List<Room> rooms = new ArrayList<>();
+        for (Map.Entry<String, List<Speaker>> entry : map.entrySet()) {
+            rooms.add(new Room(entry.getKey(), entry.getValue()));
+        }
+        return rooms;
+    }
+
+    public static List<Room> getRooms(Speaker[] speakers) {
+        return getRooms(Arrays.asList(speakers));
+    }
+
+    public static List<Room> getRooms() {
+        return getRooms(getSpeakers());
     }
 
 }

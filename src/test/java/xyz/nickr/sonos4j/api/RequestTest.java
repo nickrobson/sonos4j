@@ -1,5 +1,6 @@
 package xyz.nickr.sonos4j.api;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import xyz.nickr.sonos4j.api.exception.AlarmAlreadyExistsException;
 import xyz.nickr.sonos4j.api.model.Alarm;
@@ -16,9 +17,17 @@ import static org.junit.Assert.fail;
  */
 public class RequestTest {
 
+    private static Speaker[] speakers;
+
+    @BeforeClass
+    public static void init() {
+        speakers = Discovery.getSpeakers();
+        if (speakers.length == 0)
+            fail("No Sonos system found");
+    }
+
     @Test
     public void testRequestQueue() {
-        Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
             List<Track> queue = speaker.getQueue();
             for (int i = 0, j = queue.size(); i < j; i++) {
@@ -31,14 +40,11 @@ public class RequestTest {
                 System.out.println("-  " + track.getUri());
                 System.out.println("-  " + track.getAlbumArtLink());
             }
-            return;
         }
-        fail("No Sonos system found");
     }
 
     @Test
     public void testRequestTrack() {
-        Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
             CurrentTrack current = speaker.getCurrentTrack();
             if (current != null) {
@@ -53,27 +59,21 @@ public class RequestTest {
             } else {
                 System.out.println("No track currently being played!");
             }
-            return;
         }
-        fail("No Sonos system found");
     }
 
     @Test
     public void testListAlarms() {
-        Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
             List<Alarm> alarms = speaker.getAlarmClockController().getAlarms();
             for (Alarm alarm : alarms) {
                 System.out.println(alarm);
             }
-            return;
         }
-        fail("No Sonos system found");
     }
 
     @Test
     public void testCreateAlarm() {
-        Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
             Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, "RINCON_5CAAFD03F86E01400", "x-rincon-buzzer:0", "", Alarm.AlarmPlayMode.SHUFFLE_NOREPEAT, 25, false);
             try {
@@ -84,19 +84,14 @@ public class RequestTest {
             } catch (AlarmAlreadyExistsException ex) {
                 System.out.println("Alarm already exists!");
             }
-            return;
         }
-        fail("No Sonos system found");
     }
 
     @Test
     public void testListMusicServices() {
-        Speaker[] speakers = Discovery.getSpeakers();
         for (Speaker speaker : speakers) {
             System.out.println(speaker.getMusicServicesController().getAvailableServiceDescriptors());
-            return;
         }
-        fail("No Sonos system found");
     }
 
 }

@@ -1,5 +1,6 @@
 package xyz.nickr.sonos4j.api.model;
 
+import java.util.ArrayList;
 import lombok.Data;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,8 +21,9 @@ public class IconList {
 
     public IconList(Node node) {
         List<Element> children = Util.cast(Util.getChildList(node), Element.class);
-        List<Icon> icons = children.stream().map(Icon::new).collect(Collectors.toList());
-
+        List<Icon> icons = new ArrayList<>(children.size());
+        for (Element e : children)
+            icons.add(new Icon(e));
         this.icons = Collections.unmodifiableList(icons);
     }
 

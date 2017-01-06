@@ -22,8 +22,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +132,9 @@ public class Speaker {
 
         Map<String, Object> result = route.request(this, vars);
 
-        result.forEach((var, obj) -> System.out.println(var + ": " + obj));
+        for (Map.Entry<String, Object> e : result.entrySet()) {
+            System.out.println(e.getKey() + ": " + e.getValue());
+        }
     }
 
     public List<Track> getQueue() {
@@ -154,7 +156,7 @@ public class Speaker {
         String result = route.request(this, vars).get("Result").toString();
         Document response = Util.parseDocument(result);
 
-        List<Track> queue = new LinkedList<>();
+        List<Track> queue = new ArrayList<>();
 
         try {
             for (Element element : Util.cast(Util.getChildList(response.getDocumentElement()), Element.class)) {

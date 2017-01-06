@@ -61,22 +61,22 @@ public class ServiceRoute {
     }
 
     public Map<String, Object> request(Speaker speaker, Map<String, Object> vars) {
-        Document doc = Util.getDocumentBuilder().newDocument();
-
-        Element root = doc.createElementNS(serviceType, this.name);
-        root.setPrefix("u");
-        doc.appendChild(root);
-
-        for (Map.Entry<String, Object> var : vars.entrySet()) {
-            Element sub = doc.createElement(var.getKey());
-            Object val = var.getValue();
-            if (val instanceof Boolean)
-                val = (boolean) val ? "1" : "0";
-            sub.setTextContent(val.toString());
-            root.appendChild(sub);
-        }
-
         try {
+            Document doc = Util.getDocumentBuilder().newDocument();
+
+            Element root = doc.createElementNS(serviceType, this.name);
+            root.setPrefix("u");
+            doc.appendChild(root);
+
+            for (Map.Entry<String, Object> var : vars.entrySet()) {
+                Element sub = doc.createElement(var.getKey());
+                Object val = var.getValue();
+                if (val instanceof Boolean)
+                    val = (boolean) val ? "1" : "0";
+                sub.setTextContent(val.toString());
+                root.appendChild(sub);
+            }
+
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer();
 

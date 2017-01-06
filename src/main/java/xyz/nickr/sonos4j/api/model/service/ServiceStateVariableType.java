@@ -38,13 +38,19 @@ public enum ServiceStateVariableType {
     USHORT("ui2") {
         @Override
         public Object cast(String s) {
-            return Integer.parseInt(s);
+            int r = Integer.parseInt(s);
+            if (r < 0 || r > 0xffff)
+                throw new NumberFormatException("not an unsigned short");
+            return r;
         }
     },
     UINT("ui4") {
         @Override
         public Object cast(String s) {
-            return Long.parseLong(s);
+            long r = Long.parseLong(s);
+            if (r < 0 || r > 0xffffffffL)
+                throw new NumberFormatException("not an unsigned short");
+            return r;
         }
     };
 
