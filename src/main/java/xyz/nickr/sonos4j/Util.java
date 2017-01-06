@@ -14,7 +14,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -60,7 +64,7 @@ public class Util {
                 }
             }
             return writer.toString();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -89,7 +93,7 @@ public class Util {
         for (Object o : list) {
             try {
                 out.add(clazz.cast(o));
-            } catch (Exception ex) {}
+            } catch (ClassCastException ex) {}
         }
         return out;
     }
@@ -97,6 +101,7 @@ public class Util {
     public static Document getResponseBody(String content) {
         Document doc = parseDocument(content);
         Node node = doc.getDocumentElement().getFirstChild().getFirstChild();
+
         Document newDocument = documentBuilder.newDocument();
         Node n = newDocument.adoptNode(node.cloneNode(true));
         newDocument.appendChild(n);
