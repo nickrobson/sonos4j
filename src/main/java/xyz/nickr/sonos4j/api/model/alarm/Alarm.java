@@ -1,6 +1,7 @@
-package xyz.nickr.sonos4j.api.model;
+package xyz.nickr.sonos4j.api.model.alarm;
 
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Wither;
 
@@ -12,8 +13,9 @@ import java.util.regex.Pattern;
  */
 @Data
 @Wither
-@AllArgsConstructor
 public class Alarm {
+
+    public static final Pattern RECURRENCE_PATTERN = Pattern.compile("DAILY|ONCE|ON_0?1?2?3?4?5?6?");
 
     private final long id;
     private final String startTime;
@@ -26,6 +28,33 @@ public class Alarm {
     private final AlarmPlayMode playMode;
     private final int volume;
     private final boolean includeLinkedZones;
+
+    public Alarm(long id, String startTime, String duration, String recurrence, boolean enabled, String roomUUID, String programURI, String programMetaData, AlarmPlayMode playMode, int volume, boolean includeLinkedZones){
+        this.id = id;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.recurrence = recurrence;
+        this.enabled = enabled;
+        this.roomUUID = roomUUID;
+        this.programURI = programURI;
+        this.programMetaData = programMetaData;
+        this.playMode = playMode;
+        this.volume = volume;
+        this.includeLinkedZones = includeLinkedZones;
+
+        if (!RECURRENCE_PATTERN.matcher(recurrence).matches() || recurrence.equals("ON_"))
+            throw new IllegalArgumentException("invalid recurrence: '" + recurrence + "'");
+    }
+
+    public AlarmDay[] getActiveDays() {
+        List<AlarmDay> days = new ArrayList<>(7);
+        for (AlarmDay day : AlarmDay.values()) {
+            if (isOn(day)) {
+                days.add(day);
+            }
+        }
+        return days.toArray(new AlarmDay[0]);
+    }
 
     public boolean isOn(AlarmDay day) {
         if (recurrence.equals("DAILY"))
@@ -49,28 +78,5 @@ public class Alarm {
         }
         return false;
     }
-
-    public enum AlarmDay {
-
-        SUNDAY,
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY
-
-    }
-
-    public enum AlarmPlayMode {
-
-        NORMAL,
-        REPEAT_ALL,
-        SHUFFLE_NOREPEAT,
-        SHUFFLE
-
-    }
-
-    public static final Pattern RECURRENCE_PATTERN = Pattern.compile("DAILY|ONCE|ON_0?1?2?3?4?5?6?");
 
 }

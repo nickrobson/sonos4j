@@ -7,7 +7,8 @@ import xyz.nickr.sonos4j.Util;
 import xyz.nickr.sonos4j.api.Speaker;
 import xyz.nickr.sonos4j.api.exception.AlarmAlreadyExistsException;
 import xyz.nickr.sonos4j.api.exception.SonosException;
-import xyz.nickr.sonos4j.api.model.Alarm;
+import xyz.nickr.sonos4j.api.model.alarm.Alarm;
+import xyz.nickr.sonos4j.api.model.alarm.AlarmPlayMode;
 import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
 
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class AlarmClockController {
             String roomUUID = el.getAttribute("RoomUUID");
             String programURI = el.getAttribute("ProgramURI");
             String programMetaData = el.getAttribute("ProgramMetaData");
-            Alarm.AlarmPlayMode playMode = Alarm.AlarmPlayMode.valueOf(el.getAttribute("PlayMode"));
+            AlarmPlayMode playMode = AlarmPlayMode.valueOf(el.getAttribute("PlayMode"));
             int volume = Integer.parseInt(el.getAttribute("Volume"));
             boolean includeLinkedZones = "1".equals(el.getAttribute("IncludeLinkedZones"));
 

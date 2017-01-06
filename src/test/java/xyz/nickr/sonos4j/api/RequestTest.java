@@ -3,7 +3,8 @@ package xyz.nickr.sonos4j.api;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import xyz.nickr.sonos4j.api.exception.AlarmAlreadyExistsException;
-import xyz.nickr.sonos4j.api.model.Alarm;
+import xyz.nickr.sonos4j.api.model.alarm.Alarm;
+import xyz.nickr.sonos4j.api.model.alarm.AlarmPlayMode;
 import xyz.nickr.sonos4j.api.model.media.CurrentTrack;
 import xyz.nickr.sonos4j.api.model.media.Track;
 
@@ -75,8 +76,8 @@ public class RequestTest {
     @Test
     public void testCreateAlarm() {
         for (Speaker speaker : speakers) {
-            Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, "RINCON_5CAAFD03F86E01400", "x-rincon-buzzer:0", "", Alarm.AlarmPlayMode.SHUFFLE_NOREPEAT, 25, false);
             try {
+                Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, "RINCON_5CAAFD03F86E01400", "x-rincon-buzzer:0", "", AlarmPlayMode.SHUFFLE_NOREPEAT, 25, false);
                 Alarm alarm2 = speaker.getAlarmClockController().createAlarm(alarm);
                 System.out.println("Created alarm: " + alarm2);
                 System.out.println("    From: " + alarm);

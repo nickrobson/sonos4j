@@ -2,7 +2,7 @@ package xyz.nickr.sonos4j.api.exception;
 
 import lombok.Getter;
 import xyz.nickr.sonos4j.api.Speaker;
-import xyz.nickr.sonos4j.api.model.Alarm;
+import xyz.nickr.sonos4j.api.model.alarm.Alarm;
 
 /**
  * @author Nick Robson
