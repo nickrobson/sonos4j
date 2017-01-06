@@ -22,11 +22,9 @@ public class ServiceList {
     public ServiceList(Node node) {
         List<Element> children = Util.cast(Util.getChildList(node), Element.class);
         List<Service> services = new LinkedList<>();
-
         for (Node child : children) {
             services.add(new Service(child));
         }
-
         this.services = Collections.unmodifiableList(services);
     }
 

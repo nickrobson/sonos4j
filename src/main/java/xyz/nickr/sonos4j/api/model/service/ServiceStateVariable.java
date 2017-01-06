@@ -22,14 +22,13 @@ public class ServiceStateVariable {
     private final List<String> allowedValues;
 
     public ServiceStateVariable(Element element) {
-        this.sendEvents = element.hasAttribute("sendEvents") ? "yes".equals(element.getAttribute("sendEvents")) : false;
+        this.sendEvents = "yes".equals(element.getAttribute("sendEvents"));
 
         Map<String, Node> children = Util.getChildren(element);
 
         this.name = children.get("name").getTextContent();
         this.type = ServiceStateVariableType.fromString(children.get("dataType").getTextContent());
-
-        this.defaultValue = children.containsValue("defaultValue") ? children.get("defaultValue").getTextContent() : null;
+        this.defaultValue = children.containsKey("defaultValue") ? children.get("defaultValue").getTextContent() : null;
 
         if (children.containsKey("allowedValueList")) {
             List<Element> avl = Util.cast(Util.getChildList(children.get("allowedValueList")), Element.class);
