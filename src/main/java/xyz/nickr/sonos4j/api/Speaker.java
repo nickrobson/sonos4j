@@ -86,32 +86,26 @@ public class Speaker {
         return null;
     }
 
-    public ServiceRoute getRoute(String endpoint, String name, boolean exceptionIfFail) {
+    public ServiceRoute getRoute(String endpoint, String name) {
         ServiceList.Service service = getService(endpoint);
         if (service == null)
             return null;
         ServiceSchema schema = service.getSchema().load(this);
         ServiceRoute route = schema.getRoute(name);
-        if (route == null && exceptionIfFail) {
+        if (route == null) {
             throw new RouteMissingException(this, endpoint, name);
         }
         return route;
     }
 
-    public ServiceRoute getRoute(String endpoint, String name) {
-        return getRoute(endpoint, name, false);
-    }
-
     public CurrentTrack getCurrentTrack() {
-        ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetPositionInfo", true);
+        ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetPositionInfo");
 
         Map<String, Object> vars = new HashMap<>();
 
         vars.put("InstanceID", 0);
 
         Map<String, Object> result = route.request(this, vars);
-
-        System.out.println(result);
 
         String trackMetadata = result.get("TrackMetaData").toString();
         if (trackMetadata.isEmpty())

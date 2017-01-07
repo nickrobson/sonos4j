@@ -25,7 +25,7 @@ public class AlarmClockController {
     private final Speaker speaker;
 
     public List<Alarm> getAlarms() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms");
 
         Map<String, Object> vars = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class AlarmClockController {
     }
 
     public Alarm createAlarm(Alarm alarm) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "CreateAlarm", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "CreateAlarm");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("StartLocalTime", alarm.getStartTime());
@@ -79,7 +79,7 @@ public class AlarmClockController {
     }
 
     public void updateAlarm(long id, Alarm alarm) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "UpdateAlarm", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "UpdateAlarm");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("ID", id);
@@ -98,7 +98,7 @@ public class AlarmClockController {
     }
 
     public String getAlarmListVersion() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -107,7 +107,7 @@ public class AlarmClockController {
     }
 
     public String getTimeFormat() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -116,7 +116,7 @@ public class AlarmClockController {
     }
 
     public String getDateFormat() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -133,7 +133,7 @@ public class AlarmClockController {
     }
 
     public void setFormat(String timeFormat, String dateFormat) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetFormat", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetFormat");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("DesiredTimeFormat", timeFormat);
@@ -143,7 +143,7 @@ public class AlarmClockController {
     }
 
     public String getDailyIndexRefreshTime() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -152,7 +152,7 @@ public class AlarmClockController {
     }
 
     public void setDailyIndexRefreshTime(String refreshTime) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("DesiredDailyIndexRefreshTime", refreshTime);
@@ -161,7 +161,7 @@ public class AlarmClockController {
     }
 
     public String getHouseholdTimeAtStamp(String timeStamp) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetHouseholdTimeAtStamp", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetHouseholdTimeAtStamp");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("TimeStamp", timeStamp);
@@ -172,7 +172,7 @@ public class AlarmClockController {
     }
 
     public String getTimeServer() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeServer", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeServer");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -181,7 +181,7 @@ public class AlarmClockController {
     }
 
     public void setTimeServer(String timeServer) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeServer", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeServer");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("DesiredTimeServer", timeServer);
@@ -190,7 +190,7 @@ public class AlarmClockController {
     }
 
     public String getTimeZoneRule(int index) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("Index", index);
@@ -201,7 +201,7 @@ public class AlarmClockController {
     }
 
     public String getTimeZone() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -210,7 +210,7 @@ public class AlarmClockController {
     }
 
     public void setTimeZone(int index, boolean autoAdjustDST) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("Index", index);
@@ -220,7 +220,7 @@ public class AlarmClockController {
     }
 
     public int getTimeZoneIndex() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -229,7 +229,7 @@ public class AlarmClockController {
     }
 
     public boolean isTimeZoneAutoAdjustDST() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -238,7 +238,7 @@ public class AlarmClockController {
     }
 
     public String getCurrentUTCTime() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -247,7 +247,7 @@ public class AlarmClockController {
     }
 
     public String getCurrentLocalTime() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -256,7 +256,7 @@ public class AlarmClockController {
     }
 
     public String getCurrentTimeZone() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -265,7 +265,7 @@ public class AlarmClockController {
     }
 
     public long getCurrentTimeGeneration() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -274,7 +274,7 @@ public class AlarmClockController {
     }
 
     public void setTimeNow(String time, String timeZone) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeNow", true);
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeNow");
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("DesiredTime", time);

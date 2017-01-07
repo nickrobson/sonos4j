@@ -18,7 +18,7 @@ public class MusicServicesController {
     private final Speaker speaker;
 
     public String getSessionId(long serviceId, String username) {
-        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "GetSessionId", true);
+        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "GetSessionId");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -27,7 +27,7 @@ public class MusicServicesController {
     }
 
     public List<String> getAvailableServiceDescriptors() {
-        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "ListAvailableServices", true);
+        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "ListAvailableServices");
 
         Map<String, Object> vars = new HashMap<>();
         Map<String, Object> result = route.request(speaker, vars);
@@ -38,7 +38,7 @@ public class MusicServicesController {
     }
 
     public void updateAvailableServices() {
-        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "UpdateAvailableServices", true);
+        ServiceRoute route = speaker.getRoute("/MusicServices/Control", "UpdateAvailableServices");
 
         Map<String, Object> vars = new HashMap<>();
         route.request(speaker, vars);
