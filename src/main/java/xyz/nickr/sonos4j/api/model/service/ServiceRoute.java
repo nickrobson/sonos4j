@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import xyz.nickr.sonos4j.api.soap.SoapMessage;
 
 /**
  * @author Nick Robson
@@ -25,15 +26,17 @@ import java.util.Map;
 @Data
 public class ServiceRoute {
 
+    private final Speaker speaker;
     private final String name;
     private final String endpoint;
     private final String serviceType;
     private final String action;
     private final Map<String, ServiceRouteArgument> arguments;
 
-    public ServiceRoute(String serviceType, String endpoint, Map<String, ServiceStateVariable> vars, Node node) {
+    public ServiceRoute(Speaker speaker, String serviceType, String endpoint, Map<String, ServiceStateVariable> vars, Node node) {
         Map<String, Node> children = Util.getChildren(node);
 
+        this.speaker = speaker;
         this.name = children.get("name").getTextContent();
         this.endpoint = endpoint;
         this.serviceType = serviceType;
@@ -60,53 +63,22 @@ public class ServiceRoute {
         this.arguments = Collections.unmodifiableMap(arguments);
     }
 
-    public Map<String, Object> request(Speaker speaker, Map<String, Object> vars) {
-        try {
-            Document doc = Util.getDocumentBuilder().newDocument();
-
-            Element root = doc.createElementNS(serviceType, this.name);
-            root.setPrefix("u");
-            doc.appendChild(root);
-
-            for (Map.Entry<String, Object> var : vars.entrySet()) {
-                Element sub = doc.createElement(var.getKey());
-                Object val = var.getValue();
-                if (val instanceof Boolean)
-                    val = (boolean) val ? "1" : "0";
-                sub.setTextContent(val.toString());
-                root.appendChild(sub);
-            }
-
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-
-            transformer.setOutputProperty(OutputKeys.METHOD, "html");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
-            StringWriter writer = new StringWriter();
-            transformer.transform(new DOMSource(doc), new StreamResult(writer));
-
-            return request(speaker, writer.toString());
-        } catch (Exception ex) {
-            throw new SonosException(speaker, "Error while making request", ex);
-        }
+    public Map<String, Object> request() {
+        return request(Collections.emptyList());
     }
 
-    public Map<String, Object> request(Speaker speaker, String body) {
-        String res = speaker.request(endpoint, action, body);
-        Document responseBody = Util.getResponseBody(res);
+    public Map<String, Object> request(List<Map.Entry<String, Object>> args) {
+        SoapMessage message = new SoapMessage(
+                speaker.getURL() + endpoint,
+                name,
+                args,
+                null,
+                action,
+                null,
+                serviceType
+        );
 
-        Map<String, Object> vars = new LinkedHashMap<>();
-
-        for (Element el : Util.cast(Util.getChildList(responseBody.getDocumentElement()), Element.class)) {
-            ServiceRouteArgument arg = this.arguments.get(el.getNodeName());
-            if (arg == null)
-                continue;
-            ServiceStateVariable var = arg.getVariable();
-            vars.put(el.getNodeName(), var.getType().cast(el.getTextContent()));
-        }
-
-        return vars;
+        return message.callAndParse(this.arguments);
     }
 
 }

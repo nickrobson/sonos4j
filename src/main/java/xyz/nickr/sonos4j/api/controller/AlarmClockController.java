@@ -1,5 +1,6 @@
 package xyz.nickr.sonos4j.api.controller;
 
+import java.util.AbstractMap;
 import lombok.AllArgsConstructor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,9 +28,7 @@ public class AlarmClockController {
     public List<Alarm> getAlarms() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms");
 
-        Map<String, Object> vars = new HashMap<>();
-
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
         Document doc = Util.parseDocument(result.get("CurrentAlarmList").toString());
 
         List<Alarm> alarms = new LinkedList<>();
@@ -56,20 +55,20 @@ public class AlarmClockController {
     public Alarm createAlarm(Alarm alarm) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "CreateAlarm");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("StartLocalTime", alarm.getStartTime());
-        vars.put("Duration", alarm.getDuration());
-        vars.put("Recurrence", alarm.getRecurrence());
-        vars.put("Enabled", alarm.isEnabled());
-        vars.put("RoomUUID", alarm.getRoomUUID());
-        vars.put("ProgramURI", alarm.getProgramURI());
-        vars.put("ProgramMetaData", alarm.getProgramMetaData());
-        vars.put("PlayMode", alarm.getPlayMode());
-        vars.put("Volume", alarm.getVolume());
-        vars.put("IncludeLinkedZones", alarm.isIncludeLinkedZones());
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("StartLocalTime", alarm.getStartTime()));
+        vars.add(new AbstractMap.SimpleEntry<>("Duration", alarm.getDuration()));
+        vars.add(new AbstractMap.SimpleEntry<>("Recurrence", alarm.getRecurrence()));
+        vars.add(new AbstractMap.SimpleEntry<>("Enabled", alarm.isEnabled()));
+        vars.add(new AbstractMap.SimpleEntry<>("RoomUUID", alarm.getRoomUUID()));
+        vars.add(new AbstractMap.SimpleEntry<>("ProgramURI", alarm.getProgramURI()));
+        vars.add(new AbstractMap.SimpleEntry<>("ProgramMetaData", alarm.getProgramMetaData()));
+        vars.add(new AbstractMap.SimpleEntry<>("PlayMode", alarm.getPlayMode()));
+        vars.add(new AbstractMap.SimpleEntry<>("Volume", alarm.getVolume()));
+        vars.add(new AbstractMap.SimpleEntry<>("IncludeLinkedZones", alarm.isIncludeLinkedZones()));
 
         try {
-            Map<String, Object> result = route.request(speaker, vars);
+            Map<String, Object> result = route.request(vars);
             long id = Long.parseLong(result.get("AssignedID").toString());
 
             return alarm.withId(id);
@@ -81,27 +80,26 @@ public class AlarmClockController {
     public void updateAlarm(long id, Alarm alarm) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "UpdateAlarm");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("ID", id);
-        vars.put("StartLocalTime", alarm.getStartTime());
-        vars.put("Duration", alarm.getDuration());
-        vars.put("Recurrence", alarm.getRecurrence());
-        vars.put("Enabled", alarm.isEnabled());
-        vars.put("RoomUUID", alarm.getRoomUUID());
-        vars.put("ProgramURI", alarm.getProgramURI());
-        vars.put("ProgramMetaData", alarm.getProgramMetaData());
-        vars.put("PlayMode", alarm.getPlayMode());
-        vars.put("Volume", alarm.getVolume());
-        vars.put("IncludeLinkedZones", alarm.isIncludeLinkedZones());
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("ID", id));
+        vars.add(new AbstractMap.SimpleEntry<>("StartLocalTime", alarm.getStartTime()));
+        vars.add(new AbstractMap.SimpleEntry<>("Duration", alarm.getDuration()));
+        vars.add(new AbstractMap.SimpleEntry<>("Recurrence", alarm.getRecurrence()));
+        vars.add(new AbstractMap.SimpleEntry<>("Enabled", alarm.isEnabled()));
+        vars.add(new AbstractMap.SimpleEntry<>("RoomUUID", alarm.getRoomUUID()));
+        vars.add(new AbstractMap.SimpleEntry<>("ProgramURI", alarm.getProgramURI()));
+        vars.add(new AbstractMap.SimpleEntry<>("ProgramMetaData", alarm.getProgramMetaData()));
+        vars.add(new AbstractMap.SimpleEntry<>("PlayMode", alarm.getPlayMode()));
+        vars.add(new AbstractMap.SimpleEntry<>("Volume", alarm.getVolume()));
+        vars.add(new AbstractMap.SimpleEntry<>("IncludeLinkedZones", alarm.isIncludeLinkedZones()));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
     public String getAlarmListVersion() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "ListAlarms");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentAlarmListVersion").toString();
     }
@@ -109,8 +107,7 @@ public class AlarmClockController {
     public String getTimeFormat() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentTimeFormat").toString();
     }
@@ -118,8 +115,7 @@ public class AlarmClockController {
     public String getDateFormat() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetFormat");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentDateFormat").toString();
     }
@@ -135,18 +131,17 @@ public class AlarmClockController {
     public void setFormat(String timeFormat, String dateFormat) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetFormat");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("DesiredTimeFormat", timeFormat);
-        vars.put("DesiredDateFormat", dateFormat);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("DesiredTimeFormat", timeFormat));
+        vars.add(new AbstractMap.SimpleEntry<>("DesiredDateFormat", dateFormat));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
     public String getDailyIndexRefreshTime() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentDailyIndexRefreshTime").toString();
     }
@@ -154,19 +149,19 @@ public class AlarmClockController {
     public void setDailyIndexRefreshTime(String refreshTime) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("DesiredDailyIndexRefreshTime", refreshTime);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("DesiredDailyIndexRefreshTime", refreshTime));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
     public String getHouseholdTimeAtStamp(String timeStamp) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetHouseholdTimeAtStamp");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("TimeStamp", timeStamp);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("TimeStamp", timeStamp));
 
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request(vars);
 
         return result.get("HouseholdUTCTime").toString();
     }
@@ -174,8 +169,7 @@ public class AlarmClockController {
     public String getTimeServer() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeServer");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentTimeServer").toString();
     }
@@ -183,19 +177,19 @@ public class AlarmClockController {
     public void setTimeServer(String timeServer) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeServer");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("DesiredTimeServer", timeServer);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("DesiredTimeServer", timeServer));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
     public String getTimeZoneRule(int index) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("Index", index);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("Index", index));
 
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request(vars);
 
         return result.get("TimeZone").toString();
     }
@@ -203,8 +197,7 @@ public class AlarmClockController {
     public String getTimeZone() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentTimeZone").toString();
     }
@@ -212,18 +205,17 @@ public class AlarmClockController {
     public void setTimeZone(int index, boolean autoAdjustDST) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("Index", index);
-        vars.put("AutoAdjustDst", autoAdjustDST);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("Index", index));
+        vars.add(new AbstractMap.SimpleEntry<>("AutoAdjustDst", autoAdjustDST));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
     public int getTimeZoneIndex() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return Integer.parseInt(result.get("Index").toString());
     }
@@ -231,8 +223,7 @@ public class AlarmClockController {
     public boolean isTimeZoneAutoAdjustDST() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return (boolean) result.get("AutoAdjustDst");
     }
@@ -240,8 +231,7 @@ public class AlarmClockController {
     public String getCurrentUTCTime() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentUTCTime").toString();
     }
@@ -249,8 +239,7 @@ public class AlarmClockController {
     public String getCurrentLocalTime() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentLocalTime").toString();
     }
@@ -258,8 +247,7 @@ public class AlarmClockController {
     public String getCurrentTimeZone() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return result.get("CurrentTimeZone").toString();
     }
@@ -267,8 +255,7 @@ public class AlarmClockController {
     public long getCurrentTimeGeneration() {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeNow");
 
-        Map<String, Object> vars = new HashMap<>();
-        Map<String, Object> result = route.request(speaker, vars);
+        Map<String, Object> result = route.request();
 
         return Long.parseLong(result.get("CurrentTimeGeneration").toString());
     }
@@ -276,11 +263,11 @@ public class AlarmClockController {
     public void setTimeNow(String time, String timeZone) {
         ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeNow");
 
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("DesiredTime", time);
-        vars.put("TimeZoneForDesiredTime", timeZone);
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("DesiredTime", time));
+        vars.add(new AbstractMap.SimpleEntry<>("TimeZoneForDesiredTime", timeZone));
 
-        route.request(speaker, vars);
+        route.request(vars);
     }
 
 }

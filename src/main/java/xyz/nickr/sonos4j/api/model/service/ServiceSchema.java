@@ -61,7 +61,7 @@ public class ServiceSchema {
         List<Element> actionList = Util.cast(Util.getChildList(children.get("actionList")), Element.class);
 
         for (Element action : actionList) {
-            ServiceRoute route = new ServiceRoute(serviceType, controlUrl, stateTable, action);
+            ServiceRoute route = new ServiceRoute(speaker, serviceType, controlUrl, stateTable, action);
             this.routes.put(route.getName(), route);
         }
 

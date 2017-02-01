@@ -1,14 +1,18 @@
 package xyz.nickr.sonos4j.api;
 
+import java.util.AbstractMap;
+import java.util.LinkedList;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import xyz.nickr.sonos4j.Util;
+import xyz.nickr.sonos4j.api.controller.AccountsController;
 import xyz.nickr.sonos4j.api.controller.AlarmClockController;
+import xyz.nickr.sonos4j.api.controller.DevicePropertiesController;
 import xyz.nickr.sonos4j.api.controller.MusicServicesController;
+import xyz.nickr.sonos4j.api.controller.SystemPropertiesController;
 import xyz.nickr.sonos4j.api.exception.RouteMissingException;
-import xyz.nickr.sonos4j.api.exception.SonosException;
 import xyz.nickr.sonos4j.api.model.DeviceDescription;
 import xyz.nickr.sonos4j.api.model.DeviceList;
 import xyz.nickr.sonos4j.api.model.ServiceList;
@@ -17,13 +21,7 @@ import xyz.nickr.sonos4j.api.model.media.Track;
 import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
 import xyz.nickr.sonos4j.api.model.service.ServiceSchema;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +30,6 @@ import java.util.Map;
  */
 @Getter
 public class Speaker {
-
-    public static final String SOAP_TEMPLATE = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body>%s</s:Body></s:Envelope>";
-    public static final String GET_QUEUE_BODY_TEMPLATE = "<u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"><ObjectID>Q:0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>dc:title,res,dc:creator,upnp:artist,upnp:album,upnp:albumArtURI</Filter><StartingIndex>%s</StartingIndex><RequestedCount>%s</RequestedCount><SortCriteria></SortCriteria></u:Browse>";
 
     private final String ip;
 
@@ -49,6 +44,15 @@ public class Speaker {
     @Getter(lazy = true)
     private final MusicServicesController musicServicesController = new MusicServicesController(this);
 
+    @Getter(lazy = true)
+    private final AccountsController accountsController = new AccountsController(this);
+
+    @Getter(lazy = true)
+    private final DevicePropertiesController devicePropertiesController = new DevicePropertiesController(this);
+
+    @Getter(lazy = true)
+    private final SystemPropertiesController systemPropertiesController = new SystemPropertiesController(this);
+
     public Speaker(String ip) {
         this.ip = ip;
         this.url = "http://" + ip + ":1400";
@@ -60,6 +64,10 @@ public class Speaker {
 
     public String getURL() {
         return url;
+    }
+
+    public String getRoomName() {
+        return getDescription().getDevice().getRoomName();
     }
 
     public DeviceDescription getDescription() {
@@ -101,11 +109,10 @@ public class Speaker {
     public CurrentTrack getCurrentTrack() {
         ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetPositionInfo");
 
-        Map<String, Object> vars = new HashMap<>();
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("InstanceID", 0));
 
-        vars.put("InstanceID", 0);
-
-        Map<String, Object> result = route.request(this, vars);
+        Map<String, Object> result = route.request(vars);
 
         String trackMetadata = result.get("TrackMetaData").toString();
         if (trackMetadata.isEmpty())
@@ -120,11 +127,11 @@ public class Speaker {
     public void getMediaInfo() {
         ServiceRoute route = getRoute("/MediaRenderer/AVTransport/Control", "GetMediaInfo");
 
-        Map<String, Object> vars = new HashMap<>();
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
 
-        vars.put("InstanceID", 0);
+        vars.add(new AbstractMap.SimpleEntry<>("InstanceID", 0));
 
-        Map<String, Object> result = route.request(this, vars);
+        Map<String, Object> result = route.request(vars);
 
         for (Map.Entry<String, Object> e : result.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue());
@@ -138,62 +145,27 @@ public class Speaker {
     public List<Track> getQueue(int start, int maxItems) {
         ServiceRoute route = getRoute("/MediaServer/ContentDirectory/Control", "Browse");
 
-        Map<String, Object> vars = new HashMap<>();
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
 
-        vars.put("ObjectID", "Q:0");
-        vars.put("BrowseFlag", "BrowseDirectChildren");
-        vars.put("Filter", "");
-        vars.put("SortCriteria", "");
-        vars.put("StartingIndex", start);
-        vars.put("RequestedCount", maxItems);
+        vars.add(new AbstractMap.SimpleEntry<>("ObjectID", "Q:0"));
+        vars.add(new AbstractMap.SimpleEntry<>("BrowseFlag", "BrowseDirectChildren"));
+        vars.add(new AbstractMap.SimpleEntry<>("Filter", "dc:title,res,dc:creator,upnp:artist,upnp:album,upnp:albumArtURI"));
+        vars.add(new AbstractMap.SimpleEntry<>("SortCriteria", ""));
+        vars.add(new AbstractMap.SimpleEntry<>("StartingIndex", start));
+        vars.add(new AbstractMap.SimpleEntry<>("RequestedCount", maxItems));
 
-        String result = route.request(this, vars).get("Result").toString();
+        String result = route.request(vars).get("Result").toString();
         Document response = Util.parseDocument(result);
 
         List<Track> queue = new ArrayList<>();
-
-        try {
-            for (Element element : Util.cast(Util.getChildList(response.getDocumentElement()), Element.class)) {
+        for (Element element : Util.cast(Util.getChildList(response.getDocumentElement()), Element.class)) {
+            try {
                 queue.add(Track.parse(element));
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-
         return queue;
-    }
-
-    public String request(String endpoint, String action, String body) {
-        try {
-            URL url = new URL(getURL() + endpoint);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.addRequestProperty("Content-Type", "text/xml");
-            connection.addRequestProperty("SOAPACTION", action);
-
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-
-            try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
-                body = String.format(SOAP_TEMPLATE, body);
-                char[] data = body.toCharArray();
-                writer.write(data, 0, data.length);
-            }
-
-            String out = "";
-            try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-                char[] buf = new char[1024];
-                while (true) {
-                    int count = reader.read(buf, 0, buf.length);
-                    if (count < 0)
-                        break;
-                    out += new String(buf, 0, count);
-                }
-            }
-            return out;
-        } catch (IOException e) {
-            throw new SonosException(this, String.format("Failed to make request:\nendpoint = %s\naction = %s\nbody = %s", endpoint, action, body), e);
-        }
     }
 
 }

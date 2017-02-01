@@ -49,7 +49,7 @@ public enum ServiceStateVariableType {
         public Object cast(String s) {
             long r = Long.parseLong(s);
             if (r < 0 || r > 0xffffffffL)
-                throw new NumberFormatException("not an unsigned short");
+                throw new NumberFormatException("not an unsigned int");
             return r;
         }
     };

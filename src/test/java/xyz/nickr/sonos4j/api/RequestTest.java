@@ -1,11 +1,16 @@
 package xyz.nickr.sonos4j.api;
 
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import xyz.nickr.sonos4j.api.exception.AlarmAlreadyExistsException;
+import xyz.nickr.sonos4j.api.model.Account;
 import xyz.nickr.sonos4j.api.model.alarm.Alarm;
 import xyz.nickr.sonos4j.api.model.alarm.AlarmPlayMode;
 import xyz.nickr.sonos4j.api.model.media.CurrentTrack;
+import xyz.nickr.sonos4j.api.model.media.MusicService;
 import xyz.nickr.sonos4j.api.model.media.Track;
 
 import java.util.List;
@@ -47,18 +52,23 @@ public class RequestTest {
     @Test
     public void testRequestTrack() {
         for (Speaker speaker : speakers) {
-            CurrentTrack current = speaker.getCurrentTrack();
-            if (current != null) {
-                Track track = current.getTrack();
-                System.out.println("#" + current.getPositionInPlaylist() + " in playlist");
-                System.out.println(track.getTitle());
-                System.out.println("-  " + track.getArtist());
-                System.out.println("-  " + track.getAlbum());
-                System.out.println("-  " + track.getDuration());
-                System.out.println("-  " + track.getUri());
-                System.out.println("-  " + track.getAlbumArtLink());
-            } else {
-                System.out.println("No track currently being played!");
+            try {
+                System.out.println(speaker.getRoomName());
+                CurrentTrack current = speaker.getCurrentTrack();
+                if (current != null) {
+                    Track track = current.getTrack();
+                    System.out.println("#" + current.getPositionInPlaylist() + " in playlist");
+                    System.out.println(track.getTitle());
+                    System.out.println("-  " + track.getArtist());
+                    System.out.println("-  " + track.getAlbum());
+                    System.out.println("-  " + track.getDuration());
+                    System.out.println("-  " + track.getUri());
+                    System.out.println("-  " + track.getAlbumArtLink());
+                } else {
+                    System.out.println("No track currently being played!");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -91,7 +101,20 @@ public class RequestTest {
     @Test
     public void testListMusicServices() {
         for (Speaker speaker : speakers) {
-            System.out.println(speaker.getMusicServicesController().getAvailableServiceDescriptors());
+            System.out.println(speaker.getRoomName());
+            for (Map.Entry<String, MusicService> entry : speaker.getMusicServicesController().getMusicServicesMap().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue().getSearchCategories());
+            }
+        }
+    }
+
+    @Test
+    public void testListAccounts() {
+        for (Speaker speaker : speakers) {
+            System.out.println(speaker.getRoomName());
+            for (Map.Entry<String, Account> entry : speaker.getAccountsController().getAccountsMap().entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
         }
     }
 
