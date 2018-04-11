@@ -1,6 +1,9 @@
 package xyz.nickr.sonos4j.api.controller;
 
 import java.util.AbstractMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,11 +14,6 @@ import xyz.nickr.sonos4j.api.exception.SonosException;
 import xyz.nickr.sonos4j.api.model.alarm.Alarm;
 import xyz.nickr.sonos4j.api.model.alarm.AlarmPlayMode;
 import xyz.nickr.sonos4j.api.model.service.ServiceRoute;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Nick Robson
@@ -75,6 +73,19 @@ public class AlarmClockController {
         } catch (SonosException ex) {
             throw new AlarmAlreadyExistsException(speaker, alarm);
         }
+    }
+
+    public void deleteAlarm(long id) {
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "DestroyAlarm");
+
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("ID", id));
+
+        route.request(vars);
+    }
+
+    public void deleteAlarm(Alarm alarm) {
+        deleteAlarm(alarm.getId());
     }
 
     public void updateAlarm(long id, Alarm alarm) {

@@ -11,6 +11,6 @@ public enum AlarmDay {
     WEDNESDAY,
     THURSDAY,
     FRIDAY,
-    SATURDAY;
+    SATURDAY
 
 }

@@ -87,8 +87,9 @@ public class RequestTest {
     public void testCreateAlarm() {
         for (Speaker speaker : speakers) {
             try {
-                Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, "RINCON_5CAAFD03F86E01400", "x-rincon-buzzer:0", "", AlarmPlayMode.SHUFFLE_NOREPEAT, 25, false);
+                Alarm alarm = new Alarm(-1, "11:00:00", "00:01:00", "DAILY", false, speaker.getRoomId(), "x-rincon-buzzer:0", "", AlarmPlayMode.SHUFFLE_NOREPEAT, 25, false);
                 Alarm alarm2 = speaker.getAlarmClockController().createAlarm(alarm);
+                speaker.getAlarmClockController().deleteAlarm(alarm2);
                 System.out.println("Created alarm: " + alarm2);
                 System.out.println("    From: " + alarm);
                 assertEquals(alarm.withId(alarm2.getId()), alarm2);

@@ -70,6 +70,14 @@ public class Speaker {
         return getDescription().getDevice().getRoomName();
     }
 
+    public String getRoomId() {
+        String uuid = getDescription().getDevice().getUniqueDeviceNumber();
+
+        return uuid.startsWith("uuid:")
+                ? uuid.substring(5) // shaves off "uuid:"
+                : uuid;
+    }
+
     public DeviceDescription getDescription() {
         if (description == null) {
             description = new DeviceDescription(this);
