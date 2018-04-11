@@ -1,10 +1,6 @@
 package xyz.nickr.sonos4j.api;
 
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Nick Robson
