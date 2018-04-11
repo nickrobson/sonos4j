@@ -158,7 +158,7 @@ public class AlarmClockController {
     }
 
     public void setDailyIndexRefreshTime(String refreshTime) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetDailyIndexRefreshTime");
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetDailyIndexRefreshTime");
 
         List<Map.Entry<String, Object>> vars = new LinkedList<>();
         vars.add(new AbstractMap.SimpleEntry<>("DesiredDailyIndexRefreshTime", refreshTime));
@@ -205,26 +205,8 @@ public class AlarmClockController {
         return result.get("TimeZone").toString();
     }
 
-    public String getTimeZone() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
-
-        Map<String, Object> result = route.request();
-
-        return result.get("CurrentTimeZone").toString();
-    }
-
-    public void setTimeZone(int index, boolean autoAdjustDST) {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRuleAndRule");
-
-        List<Map.Entry<String, Object>> vars = new LinkedList<>();
-        vars.add(new AbstractMap.SimpleEntry<>("Index", index));
-        vars.add(new AbstractMap.SimpleEntry<>("AutoAdjustDst", autoAdjustDST));
-
-        route.request(vars);
-    }
-
     public int getTimeZoneIndex() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZone");
 
         Map<String, Object> result = route.request();
 
@@ -232,11 +214,29 @@ public class AlarmClockController {
     }
 
     public boolean isTimeZoneAutoAdjustDST() {
-        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneRule");
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZone");
 
         Map<String, Object> result = route.request();
 
         return (boolean) result.get("AutoAdjustDst");
+    }
+
+    public String getTimeZone() {
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "GetTimeZoneAndRule");
+
+        Map<String, Object> result = route.request();
+
+        return result.get("CurrentTimeZone").toString();
+    }
+
+    public void setTimeZone(int index, boolean autoAdjustDST) {
+        ServiceRoute route = speaker.getRoute("/AlarmClock/Control", "SetTimeZone");
+
+        List<Map.Entry<String, Object>> vars = new LinkedList<>();
+        vars.add(new AbstractMap.SimpleEntry<>("Index", index));
+        vars.add(new AbstractMap.SimpleEntry<>("AutoAdjustDst", autoAdjustDST));
+
+        route.request(vars);
     }
 
     public String getCurrentUTCTime() {
