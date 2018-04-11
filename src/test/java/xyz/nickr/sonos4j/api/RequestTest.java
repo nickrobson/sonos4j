@@ -39,7 +39,7 @@ public class RequestTest {
             for (int i = 0, j = queue.size(); i < j; i++) {
                 Track track = queue.get(i);
                 System.out.println();
-                System.out.println(i + ". " + track.getTitle());
+                System.out.println((i + 1) + ". " + track.getTitle());
                 System.out.println("-  " + track.getArtist());
                 System.out.println("-  " + track.getAlbum());
                 System.out.println("-  " + track.getDuration());
